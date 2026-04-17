@@ -113,12 +113,25 @@ $(document).ready(function() {
     }, observerOptions);
     
     // Observe service cards, education cards, etc.
-    $('.service-card, .education-card, .skill-category, .timeline-item, .stat-box, .interest-card').each(function() {
-        $(this).css({
-            opacity: 0,
-            transform: 'translateY(30px)'
-        });
-        observer.observe(this[0]);
+    $('.service-card, .education-card, .skill-category, .timeline-item, .interest-card').each(function() {
+        // Check if element is already visible on page load
+        const rect = this.getBoundingClientRect();
+        const isVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
+        
+        if (isVisible) {
+            // If already visible, don't apply fade-in animation
+            $(this).css({
+                opacity: 1,
+                transform: 'translateY(0)'
+            });
+        } else {
+            // Apply fade-in animation for elements below the fold
+            $(this).css({
+                opacity: 0,
+                transform: 'translateY(30px)'
+            });
+            observer.observe(this);
+        }
     });
 
     // ============================================
